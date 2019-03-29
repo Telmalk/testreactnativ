@@ -1,21 +1,35 @@
 // Components/FilmItem.js
 
 import React from 'react'
-import { StyleSheet, View, Text, Image } from 'react-native'
+import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native'
 import { getImageFromApi } from "../API/TMDBapi"
 
 class FilmItem extends React.Component {
+ 
+  _displayHeart() {
+    if (this.props.isFilmFavorite) {
+      sourceImage = require('../image/ic_favorite.png')
+      return (
+        <Image
+            source={sourceImage}
+            style={styles.favorite_image} 
+          />
+      )        
+    }
+  }
+
   render() {
-      const film = this.props.film
-      console.log(film)
+    const { film, displayDetailForFilm } = this.props
+    console.log("RENDER")
     return (
-      <View style={styles.main_container}>
+      <TouchableOpacity onPress={() => {displayDetailForFilm(film.id)}} style={styles.main_container}>
         <Image
           style={styles.image}
           source={{uri: getImageFromApi(film.poster_path)}}
         />
         <View style={styles.content_container}>
           <View style={styles.header_container}>
+            {this._displayHeart()}
             <Text style={styles.title_text}>{film.title}</Text>
             <Text style={styles.vote_text}>{film.vote_average}</Text>
           </View>
@@ -26,7 +40,7 @@ class FilmItem extends React.Component {
             <Text style={styles.date_text}>Sorti le {film.release_date}</Text>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     )
   }
 }
@@ -75,6 +89,11 @@ const styles = StyleSheet.create({
   date_text: {
     textAlign: 'right',
     fontSize: 14
+  },
+  favorite_image: {
+    width: 20,
+    height: 20,
+    marginRight: 5,
   }
 })
 
