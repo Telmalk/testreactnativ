@@ -17,6 +17,15 @@ class FilmDetail extends React.Component {
       }
     
       componentDidMount() {
+        const favoriteFilmIndex = this.props.favoritesFilm.findIndex(item => item.id === this.props.navigation.state.params.idFilm)
+        if (favoriteFilmIndex !== -1) { 
+          this.setState({
+            isLoading: false,
+            film: this.props.favoritesFilm[favoriteFilmIndex]
+          })
+          return
+        }
+        this.setState({ isLoading: true })
         getFilmDetailFromApi(this.props.navigation.state.params.idFilm).then(data => {
           this.setState({
             film: data,
@@ -54,7 +63,6 @@ class FilmDetail extends React.Component {
     }
 
     componentDidUpdate() {
-        console.log(this.props.favoriteFilm);
     }
 
       _displayFilm() {
@@ -91,7 +99,6 @@ class FilmDetail extends React.Component {
       }
     
       render() {
-          console.log(this.props)
         return (
           <View style={styles.main_container}>
             {this._displayLoading()}
